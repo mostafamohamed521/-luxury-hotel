@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+{% block title %}My Wishlist — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">My Account</span>
+    <h1>My Wishlist</h1>
+  </div>
+</div>
+<section class="section">
+  <div class="container">
+    {% if favorites %}
+    <div class="rooms-grid">
+      {% for fav in favorites %}
+      <div class="room-card reveal">
+        <div class="room-card-img">
+          {% with fav.room.images.first as img %}
+          {% if img %}<img src="{{ img.image.url }}" alt="{{ fav.room.name }}">
+          {% else %}<img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="{{ fav.room.name }}">{% endif %}
+          {% endwith %}
+          <a href="{% url 'toggle_favorite' fav.room.pk %}" class="room-card-fav active"><i class="fas fa-heart"></i></a>
+        </div>
+        <div class="room-card-body">
+          <div class="room-category">{{ fav.room.category.name }}</div>
+          <h3>{{ fav.room.name }}</h3>
+          <p>{{ fav.room.short_description }}</p>
+          <div class="room-card-footer">
+            <div class="room-price"><span class="amount">${{ fav.room.price_per_night }}</span><span class="per-night"> / night</span></div>
+            <a href="{% url 'room_detail' fav.room.pk %}" class="btn btn-primary btn-sm">View Room</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:5rem 2rem">
+      <i class="far fa-heart" style="font-size:4rem;color:var(--beige-dark);display:block;margin-bottom:1.5rem"></i>
+      <h2>Your wishlist is empty</h2>
+      <p style="color:var(--gray);margin-bottom:2rem">Browse our rooms and save your favourites.</p>
+      <a href="{% url 'rooms_list' %}" class="btn btn-primary btn-lg">Explore Rooms</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

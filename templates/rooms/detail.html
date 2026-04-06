@@ -1,0 +1,158 @@
+{% extends "base/base.html" %}
+{% block title %}{{ room.name }} — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<section class="section">
+  <div class="container">
+    <!-- GALLERY -->
+    <div class="room-detail-gallery reveal">
+      {% with images.0 as img1 %}
+      {% if img1 %}<img class="main-img" src="{{ img1.image.url }}" alt="{{ room.name }}" style="cursor:pointer" data-lightbox data-src="{{ img1.image.url }}">
+      {% else %}<img class="main-img" src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80" alt="{{ room.name }}">{% endif %}
+      {% endwith %}
+      {% for img in images|slice:"1:3" %}
+        <img src="{{ img.image.url }}" alt="{{ room.name }}" style="cursor:pointer" data-lightbox data-src="{{ img.image.url }}">
+      {% empty %}
+        <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=500&q=80" alt="{{ room.name }}">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&q=80" alt="{{ room.name }}">
+      {% endfor %}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:2.5rem;align-items:start">
+      <!-- LEFT CONTENT -->
+      <div>
+        <div class="room-category">{{ room.category.name }}</div>
+        <h1 style="margin-bottom:.5rem">{{ room.name }}</h1>
+        <div class="d-flex align-center gap-2 mb-3">
+          <div class="star-rating">
+            {% for i in "12345" %}
+              <i class="fa{% if forloop.counter <= room.average_rating %} fa-star{% else %}r fa-star empty{% endif %}"></i>
+            {% endfor %}
+          </div>
+          <span style="font-size:.85rem;color:var(--gray)">{{ room.average_rating }}/5 ({{ room.review_count }} reviews)</span>
+          <span style="color:var(--beige-dark)">|</span>
+          <span style="font-size:.82rem;color:var(--gray)"><i class="fa fa-building" style="color:var(--gold)"></i> Floor {{ room.floor }}</span>
+          <span style="color:var(--beige-dark)">|</span>
+          <span style="font-size:.82rem;color:var(--gray)">Room {{ room.room_number }}</span>
+        </div>
+        <div class="divider"></div>
+        <p style="font-size:1rem;line-height:1.9;margin-bottom:2rem">{{ room.description }}</p>
+
+        <!-- FEATURES -->
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem;padding:1.5rem;background:var(--beige-light);border-radius:var(--radius-sm)">
+          <div class="room-meta-item" style="font-size:.9rem"><i class="fa fa-expand-arrows-alt"></i> {{ room.size_sqm }} m² Suite</div>
+          <div class="room-meta-item" style="font-size:.9rem"><i class="fa fa-user-friends"></i> Up to {{ room.max_guests }} guests</div>
+          {% if room.has_sea_view %}<div class="room-meta-item" style="font-size:.9rem"><i class="fa fa-water"></i> Sea View</div>{% endif %}
+          {% if room.has_balcony %}<div class="room-meta-item" style="font-size:.9rem"><i class="fa fa-door-open"></i> Private Balcony</div>{% endif %}
+          {% if room.has_jacuzzi %}<div class="room-meta-item" style="font-size:.9rem"><i class="fa fa-hot-tub"></i> Jacuzzi</div>{% endif %}
+          {% if room.has_fireplace %}<div class="room-meta-item" style="font-size:.9rem"><i class="fa fa-fire"></i> Fireplace</div>{% endif %}
+        </div>
+
+        <!-- AMENITIES -->
+        {% if amenities %}
+        <h3 style="margin-bottom:1.2rem;font-size:1.5rem">Room Amenities</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:2.5rem">
+          {% for a in amenities %}
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--charcoal-light)">
+            <i class="fa fa-check-circle" style="color:var(--gold)"></i> {{ a.name }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- REVIEWS -->
+        <div class="divider"></div>
+        <h3 style="margin-bottom:1.5rem;font-size:1.5rem">Guest Reviews ({{ review_count }})</h3>
+        {% for review in reviews %}
+        <div class="review-card">
+          <div class="review-meta">
+            <div class="star-rating">
+              {% for i in "12345" %}<i class="fa{% if forloop.counter <= review.rating %} fa-star{% else %}r fa-star empty{% endif %}"></i>{% endfor %}
+            </div>
+            <span>{{ review.user.get_full_name|default:review.user.username }}</span>
+            <span>{{ review.created_at|date:"M d, Y" }}</span>
+          </div>
+          <h5>{{ review.title }}</h5>
+          <p style="font-size:.88rem;color:var(--gray);margin:0">{{ review.comment }}</p>
+        </div>
+        {% empty %}
+        <p style="color:var(--gray)">No reviews yet. Be the first to share your experience!</p>
+        {% endfor %}
+
+        <!-- ADD REVIEW -->
+        {% if user.is_authenticated %}
+        <div style="margin-top:2rem;padding:2rem;background:var(--beige-light);border-radius:var(--radius-md)">
+          <h4 style="margin-bottom:1.5rem">Share Your Experience</h4>
+          <form method="post" action="{% url 'add_review' room.pk %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label class="form-label">Overall Rating</label>
+              <div class="rating-input">
+                {% for i in "54321" %}
+                <input type="radio" name="rating" id="r{{ i }}" value="{{ i }}">
+                <label for="r{{ i }}"><i class="fa fa-star"></i></label>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Review Title</label>
+              <input type="text" name="title" class="form-control" placeholder="Summarise your experience" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Review</label>
+              <textarea name="comment" class="form-control" rows="4" placeholder="Tell us about your stay..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- BOOKING PANEL -->
+      <div style="position:sticky;top:100px">
+        <div class="card" style="margin-bottom:1.2rem">
+          <div class="card-body">
+            <div style="text-align:center;padding-bottom:1rem;border-bottom:1px solid var(--beige);margin-bottom:1.2rem">
+              <span style="font-family:var(--font-serif);font-size:2.2rem;font-weight:500">${{ room.price_per_night }}</span>
+              <span style="font-size:.82rem;color:var(--gray)"> / night</span>
+            </div>
+            <form method="get" action="{% url 'create_booking' room.pk %}">
+              <div class="form-group">
+                <label class="form-label">Check In</label>
+                <input type="date" name="check_in" class="form-control" data-price="{{ room.price_per_night }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Check Out</label>
+                <input type="date" name="check_out" class="form-control">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Guests</label>
+                <select name="guests" class="form-control">
+                  {% for i in "12345678" %}
+                  {% if forloop.counter <= room.max_guests %}
+                  <option value="{{ forloop.counter }}">{{ forloop.counter }} Guest{% if forloop.counter > 1 %}s{% endif %}</option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div id="price-preview" style="margin-bottom:1rem"></div>
+              {% if user.is_authenticated %}
+              <a href="{% url 'create_booking' room.pk %}" class="btn btn-primary w-100 btn-lg" style="display:block;text-align:center">Reserve Now</a>
+              {% else %}
+              <a href="{% url 'login' %}?next={% url 'create_booking' room.pk %}" class="btn btn-primary w-100 btn-lg" style="display:block;text-align:center">Sign In to Book</a>
+              {% endif %}
+            </form>
+            <p style="font-size:.76rem;color:var(--gray);text-align:center;margin-top:.8rem">Free cancellation up to 48h before arrival</p>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <a href="{% url 'toggle_favorite' room.pk %}" class="btn btn-outline w-100" style="display:block">
+            <i class="fa{% if is_favorite %}s{% else %}r{% endif %} fa-heart" style="color:{% if is_favorite %}#e74c3c{% else %}var(--gray){% endif %}"></i>
+            {% if is_favorite %}Saved to Wishlist{% else %}Save to Wishlist{% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

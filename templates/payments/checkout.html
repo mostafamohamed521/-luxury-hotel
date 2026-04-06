@@ -1,0 +1,83 @@
+{% extends "base/base.html" %}
+{% block title %}Checkout — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<section class="section-sm">
+  <div class="container">
+    <h2 style="margin-bottom:2rem">Secure Checkout</h2>
+    <div class="booking-layout">
+      <div>
+        <div class="card">
+          <div class="card-header"><h4><i class="fa fa-lock" style="color:var(--gold)"></i> Payment Information</h4></div>
+          <div class="card-body">
+            <div class="payment-methods">
+              <button type="button" class="payment-method-btn active" data-method="credit_card"><i class="fa fa-credit-card"></i> Credit Card</button>
+              <button type="button" class="payment-method-btn" data-method="debit_card"><i class="fa fa-credit-card"></i> Debit Card</button>
+            </div>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="method" value="credit_card">
+              {% if form.non_field_errors %}<div class="alert alert-error">{{ form.non_field_errors.0 }}</div>{% endif %}
+              <div class="form-group">
+                <label class="form-label">Card Number</label>
+                <div class="card-input-wrapper">
+                  <input type="text" name="card_number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+                  <i class="fa fa-credit-card"></i>
+                </div>
+                {% if form.card_number.errors %}<p style="color:#EF4444;font-size:.8rem">{{ form.card_number.errors.0 }}</p>{% endif %}
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cardholder Name</label>
+                <input type="text" name="card_name" class="form-control" placeholder="As it appears on your card">
+                {% if form.card_name.errors %}<p style="color:#EF4444;font-size:.8rem">{{ form.card_name.errors.0 }}</p>{% endif %}
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div class="form-group">
+                  <label class="form-label">Expiry Date</label>
+                  <input type="text" name="expiry" class="form-control" placeholder="MM/YY" maxlength="5">
+                  {% if form.expiry.errors %}<p style="color:#EF4444;font-size:.8rem">{{ form.expiry.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CVV</label>
+                  <div class="card-input-wrapper">
+                    <input type="password" name="cvv" class="form-control" placeholder="&#9679;&#9679;&#9679;" maxlength="4">
+                    <i class="fa fa-question-circle"></i>
+                  </div>
+                  {% if form.cvv.errors %}<p style="color:#EF4444;font-size:.8rem">{{ form.cvv.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+              <div style="background:var(--beige-light);padding:1rem;border-radius:var(--radius-sm);margin-bottom:1.5rem;display:flex;align-items:center;gap:.7rem;font-size:.82rem;color:var(--charcoal-light)">
+                <i class="fa fa-shield-alt" style="color:var(--gold)"></i>
+                Your payment is secured with 256-bit SSL encryption. This is a simulated payment — no real charges apply.
+              </div>
+              <button type="submit" class="btn btn-primary w-100 btn-lg">
+                <i class="fa fa-lock"></i> Pay ${{ booking.total_price }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="booking-summary-card">
+          {% with booking.room.images.first as img %}
+          <div class="booking-summary-img">
+            {% if img %}<img src="{{ img.image.url }}" alt="{{ booking.room.name }}">
+            {% else %}<img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80" alt="{{ booking.room.name }}">{% endif %}
+          </div>
+          {% endwith %}
+          <div class="booking-summary-body">
+            <div class="room-category">{{ booking.room.category.name }}</div>
+            <h4>{{ booking.room.name }}</h4>
+            <div class="booking-detail-row"><span class="label">Check In</span><span class="value">{{ booking.check_in|date:"M d, Y" }}</span></div>
+            <div class="booking-detail-row"><span class="label">Check Out</span><span class="value">{{ booking.check_out|date:"M d, Y" }}</span></div>
+            <div class="booking-detail-row"><span class="label">{{ booking.nights }} night{{ booking.nights|pluralize }}</span><span class="value">${{ booking.room_price }}</span></div>
+            <div class="booking-detail-row"><span class="label">Taxes &amp; fees</span><span class="value">${{ booking.taxes }}</span></div>
+            <div class="booking-total-row"><span class="label">Total</span><span class="value">${{ booking.total_price }}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

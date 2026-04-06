@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Lumière Hotel{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<nav class="navbar {% block nav_class %}{% endblock %}" data-transparent="{% block nav_transparent %}false{% endblock %}">
+  <a href="{% url 'home' %}" class="nav-logo">Lumière<span>&#10022;</span></a>
+  <ul class="nav-links">
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'rooms_list' %}">Rooms</a></li>
+    <li><a href="{% url 'services' %}">Services</a></li>
+    <li><a href="{% url 'gallery' %}">Gallery</a></li>
+    <li><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'contact' %}">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" class="btn-nav"><i class="fa fa-user"></i> {{ user.first_name|default:user.username }}</a>
+      {% if user.is_staff %}<a href="{% url 'admin_dashboard' %}" class="btn-nav btn-nav-solid">Dashboard</a>{% endif %}
+      <a href="{% url 'logout' %}" class="btn-nav">Sign Out</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn-nav">Sign In</a>
+      <a href="{% url 'register' %}" class="btn-nav btn-nav-solid">Join Us</a>
+    {% endif %}
+  </div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'rooms_list' %}">Rooms &amp; Suites</a></li>
+    <li><a href="{% url 'services' %}">Services</a></li>
+    <li><a href="{% url 'gallery' %}">Gallery</a></li>
+    <li><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'contact' %}">Contact</a></li>
+    {% if user.is_authenticated %}
+      <li><a href="{% url 'profile' %}">My Profile</a></li>
+      <li><a href="{% url 'logout' %}">Sign Out</a></li>
+    {% else %}
+      <li><a href="{% url 'login' %}">Sign In</a></li>
+      <li><a href="{% url 'register' %}">Create Account</a></li>
+    {% endif %}
+  </ul>
+</div>
+{% if messages %}
+<div style="position:fixed;top:82px;right:1.5rem;z-index:2000;max-width:380px;width:calc(100vw - 3rem)">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags|default:'info' }}">
+    <i class="fa fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% block content %}{% endblock %}
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close"><i class="fa fa-times"></i></button>
+  <img src="" alt="" class="lightbox-img" id="lightbox-img">
+</div>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo">Lumière<span>&#10022;</span></span>
+      <p>Where elegance meets tranquility. A sanctuary of refined luxury nestled in the heart of the city, offering an unparalleled experience of comfort and sophistication.</p>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="{% url 'rooms_list' %}">Rooms &amp; Suites</a></li>
+        <li><a href="{% url 'services' %}">Spa &amp; Wellness</a></li>
+        <li><a href="{% url 'gallery' %}">Gallery</a></li>
+        <li><a href="{% url 'about' %}">Our Story</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Guest Services</h5>
+      <ul>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+        <li><a href="{% url 'wishlist' %}">My Wishlist</a></li>
+        <li><a href="{% url 'profile' %}">My Profile</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}">Sign In</a></li>
+        <li><a href="{% url 'register' %}">Create Account</a></li>
+        {% endif %}
+        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="#">1 Boulevard Haussmann, Paris</a></li>
+        <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
+        <li><a href="mailto:hello@lumiere-hotel.com">hello@lumiere-hotel.com</a></li>
+        <li><a href="#">24/7 Concierge</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2024 Lumiere Hotel. All rights reserved.</span>
+    <span>Privacy Policy &nbsp;&#183;&nbsp; Terms of Service</span>
+  </div>
+</footer>
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

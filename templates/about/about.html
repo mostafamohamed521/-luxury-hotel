@@ -1,0 +1,81 @@
+{% extends "base/base.html" %}
+{% block title %}About Us — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">Our Story</span>
+    <h1>About Lumiere Hotel</h1>
+  </div>
+</div>
+
+<section class="section" style="background:var(--white)">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image reveal">
+        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&q=80" alt="Lumiere Hotel">
+      </div>
+      <div class="reveal">
+        <span class="section-label">Est. 1892</span>
+        <h2>A Century of Unmatched Elegance</h2>
+        <div class="gold-divider" style="justify-content:flex-start"><span></span><i class="fa fa-circle"></i><span></span></div>
+        <p style="margin-bottom:1.2rem">What began as the private mansion of the Comte de Lumiere in 1892 has evolved into one of the world&#39;s most celebrated luxury hotels. Every corridor, every suite, every detail carries the weight of history and the promise of perfection.</p>
+        <p style="margin-bottom:2rem">Through the Belle Epoque, two World Wars, and the modernisation of Paris, Lumiere has stood as an unwavering beacon of hospitality — hosting royalty, presidents, artists, and travellers who seek nothing short of the extraordinary.</p>
+        <div class="about-values">
+          <div class="value-card"><h5>Our Heritage</h5><p>Over 130 years of Parisian hospitality, woven into every experience.</p></div>
+          <div class="value-card"><h5>Excellence</h5><p>Five-star service is not a goal — it is our minimum standard.</p></div>
+          <div class="value-card"><h5>Artisanship</h5><p>Every room hand-curated by master designers and artisans.</p></div>
+          <div class="value-card"><h5>Sustainability</h5><p>Committed to responsible luxury for future generations.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div class="stat-item"><span class="number count-up" data-target="132" data-suffix="">132</span><span class="label">Years of History</span></div>
+    <div class="stat-item"><span class="number count-up" data-target="48" data-suffix="">48</span><span class="label">Luxury Suites</span></div>
+    <div class="stat-item"><span class="number count-up" data-target="380" data-suffix="">380</span><span class="label">Team Members</span></div>
+    <div class="stat-item"><span class="number count-up" data-target="9" data-suffix="">9</span><span class="label">Awards in 2024</span></div>
+  </div>
+</div>
+
+<section class="section" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Leadership</span>
+      <h2>Exceptional People</h2>
+      <div class="gold-divider"><span></span><i class="fa fa-circle"></i><span></span></div>
+      <p>Behind every unforgettable stay is a team deeply committed to excellence, warmth, and the art of true hospitality.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem" class="reveal">
+      <div style="text-align:center;padding:2rem">
+        <div style="width:90px;height:90px;border-radius:50%;background:var(--beige);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:var(--font-serif);font-size:2rem;color:var(--gold)">SL</div>
+        <h4 style="margin-bottom:.3rem">Sophie Laurent</h4>
+        <p style="font-size:.8rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em">General Manager</p>
+      </div>
+      <div style="text-align:center;padding:2rem">
+        <div style="width:90px;height:90px;border-radius:50%;background:var(--beige);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:var(--font-serif);font-size:2rem;color:var(--gold)">AD</div>
+        <h4 style="margin-bottom:.3rem">Antoine Dubois</h4>
+        <p style="font-size:.8rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em">Executive Chef</p>
+      </div>
+      <div style="text-align:center;padding:2rem">
+        <div style="width:90px;height:90px;border-radius:50%;background:var(--beige);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:var(--font-serif);font-size:2rem;color:var(--gold)">MR</div>
+        <h4 style="margin-bottom:.3rem">Marie-Claire Rousseau</h4>
+        <p style="font-size:.8rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em">Spa Director</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--charcoal);text-align:center">
+  <div class="container reveal">
+    <span class="section-label" style="color:var(--gold)">Visit Us</span>
+    <h2 style="color:var(--white);margin-bottom:1rem">Plan Your Stay</h2>
+    <p style="color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 2.5rem">We look forward to welcoming you to Lumiere — where every arrival feels like coming home.</p>
+    <a href="{% url 'rooms_list' %}" class="btn btn-primary btn-lg">View Rooms</a>
+    &nbsp;&nbsp;
+    <a href="{% url 'contact' %}" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3);color:var(--white)">Contact Us</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base/base.html" %}
+{% block title %}Edit Profile — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<section class="section-sm">
+  <div class="container" style="max-width:700px">
+    <h2 style="margin-bottom:2rem">Edit Profile</h2>
+    <div class="card">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div class="form-group"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" value="{{ user.first_name }}"></div>
+            <div class="form-group"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" value="{{ user.last_name }}"></div>
+            <div class="form-group"><label class="form-label">Phone</label><input type="tel" name="phone" class="form-control" value="{{ user.phone }}"></div>
+            <div class="form-group"><label class="form-label">Nationality</label><input type="text" name="nationality" class="form-control" value="{{ user.nationality }}"></div>
+            <div class="form-group"><label class="form-label">Date of Birth</label><input type="date" name="date_of_birth" class="form-control" value="{{ user.date_of_birth|date:'Y-m-d'|default:'' }}"></div>
+            <div class="form-group"><label class="form-label">Profile Photo</label><input type="file" name="avatar" class="form-control" accept="image/*"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Bio</label><textarea name="bio" class="form-control" rows="3" placeholder="Tell us about yourself">{{ user.bio }}</textarea></div>
+          <div style="display:flex;gap:1rem">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'profile' %}" class="btn btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

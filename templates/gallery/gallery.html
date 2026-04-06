@@ -1,0 +1,72 @@
+{% extends "base/base.html" %}
+{% block title %}Gallery — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">Visual Journey</span>
+    <h1>Gallery</h1>
+    <div class="breadcrumb"><a href="{% url 'home' %}">Home</a> <i class="fa fa-chevron-right" style="font-size:.6rem"></i> <span>Gallery</span></div>
+  </div>
+</div>
+<section class="section">
+  <div class="container">
+    <div class="filter-chips" style="justify-content:center">
+      <button class="chip active" data-filter="all">All</button>
+      {% for key, label in categories.items %}
+      <button class="chip {% if selected == key %}active{% endif %}" data-filter="{{ key }}">{{ label }}</button>
+      {% endfor %}
+    </div>
+
+    {% if images %}
+    <div class="gallery-grid">
+      {% for img in images %}
+      <div class="gallery-item {% if forloop.first %}large{% endif %}" data-lightbox data-src="{{ img.image.url }}" data-category="{{ img.category }}">
+        <img src="{{ img.image.url }}" alt="{{ img.title }}">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <!-- PLACEHOLDER GALLERY (Unsplash images) -->
+    <div class="gallery-grid">
+      <div class="gallery-item large" data-lightbox data-src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80" alt="Luxury Suite">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=500&q=80" alt="Pool">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&q=80" alt="Spa">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" alt="Restaurant">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500&q=80" alt="Lobby">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=500&q=80" alt="Bathroom">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=500&q=80" alt="Exterior">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&q=80" alt="Bedroom">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+      <div class="gallery-item" data-lightbox data-src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=900&q=80">
+        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=500&q=80" alt="View">
+        <div class="gallery-overlay"><i class="fa fa-expand"></i></div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

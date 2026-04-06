@@ -1,0 +1,117 @@
+{% extends "base/base.html" %}
+{% block title %}My Profile — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<div class="profile-header">
+  <div class="profile-avatar">
+    {% if user.avatar %}<img src="{{ user.avatar.url }}" alt="{{ user.get_full_name }}">
+    {% else %}{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}{% endif %}
+  </div>
+  <h2>{{ user.get_full_name|default:user.username }}</h2>
+  <p>{{ user.email }} {% if user.nationality %}&nbsp;&#183;&nbsp; {{ user.nationality }}{% endif %}</p>
+</div>
+<section class="section-sm">
+  <div class="container">
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="tab-bookings">My Bookings</button>
+      <button class="tab-btn" data-tab="tab-wishlist">Wishlist</button>
+      <button class="tab-btn" data-tab="tab-info">Profile Info</button>
+    </div>
+
+    <div id="tab-bookings" class="tab-pane">
+      {% if bookings %}
+        {% for booking in bookings %}
+        <div class="card mb-3" style="margin-bottom:1rem">
+          <div class="card-body" style="padding:1.5rem">
+            <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:1rem">
+              <div>
+                <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem">
+                  <h4 style="margin:0;font-size:1.2rem">{{ booking.room.name }}</h4>
+                  <span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                </div>
+                <p style="font-size:.82rem;color:var(--gray);margin:0">Ref: {{ booking.booking_ref }} &nbsp;&#183;&nbsp; Booked {{ booking.created_at|date:"M d, Y" }}</p>
+                <div style="display:flex;gap:1.5rem;margin-top:.8rem;flex-wrap:wrap">
+                  <span style="font-size:.85rem"><i class="fa fa-calendar-check" style="color:var(--gold)"></i> {{ booking.check_in|date:"M d, Y" }}</span>
+                  <span style="font-size:.85rem"><i class="fa fa-arrow-right" style="color:var(--gray-light)"></i></span>
+                  <span style="font-size:.85rem"><i class="fa fa-calendar-times" style="color:var(--gold)"></i> {{ booking.check_out|date:"M d, Y" }}</span>
+                  <span style="font-size:.85rem"><i class="fa fa-moon" style="color:var(--gold)"></i> {{ booking.nights }} night{{ booking.nights|pluralize }}</span>
+                  <span style="font-size:.85rem"><i class="fa fa-user-friends" style="color:var(--gold)"></i> {{ booking.guests }} guest{{ booking.guests|pluralize }}</span>
+                </div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:var(--font-serif);font-size:1.6rem;color:var(--gold)">${{ booking.total_price }}</div>
+                <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+                  <a href="{% url 'booking_detail' booking.pk %}" class="btn btn-outline btn-sm">Details</a>
+                  {% if booking.status in 'pending,confirmed' %}
+                  <a href="{% url 'cancel_booking' booking.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Cancel booking {{ booking.booking_ref }}?')">Cancel</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="text-align:center;padding:4rem 2rem">
+          <i class="fa fa-bed" style="font-size:3rem;color:var(--beige-dark);margin-bottom:1rem;display:block"></i>
+          <h3>No bookings yet</h3>
+          <p style="color:var(--gray);margin-bottom:1.5rem">Your next luxury stay is just a click away.</p>
+          <a href="{% url 'rooms_list' %}" class="btn btn-primary">Browse Rooms</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div id="tab-wishlist" class="tab-pane" style="display:none">
+      {% if favorites %}
+        <div class="rooms-grid">
+          {% for fav in favorites %}
+          <div class="room-card">
+            <div class="room-card-img">
+              {% with fav.room.images.first as img %}
+              {% if img %}<img src="{{ img.image.url }}" alt="{{ fav.room.name }}">
+              {% else %}<img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="{{ fav.room.name }}">{% endif %}
+              {% endwith %}
+              <a href="{% url 'toggle_favorite' fav.room.pk %}" class="room-card-fav active"><i class="fas fa-heart"></i></a>
+            </div>
+            <div class="room-card-body">
+              <div class="room-category">{{ fav.room.category.name }}</div>
+              <h3>{{ fav.room.name }}</h3>
+              <div class="room-card-footer">
+                <div class="room-price"><span class="amount">${{ fav.room.price_per_night }}</span><span class="per-night"> / night</span></div>
+                <a href="{% url 'room_detail' fav.room.pk %}" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="text-align:center;padding:4rem 2rem">
+          <i class="far fa-heart" style="font-size:3rem;color:var(--beige-dark);margin-bottom:1rem;display:block"></i>
+          <h3>Your wishlist is empty</h3>
+          <p style="color:var(--gray);margin-bottom:1.5rem">Save your favourite rooms for easy access later.</p>
+          <a href="{% url 'rooms_list' %}" class="btn btn-primary">Explore Rooms</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div id="tab-info" class="tab-pane" style="display:none">
+      <div style="max-width:600px">
+        <div class="card">
+          <div class="card-header"><h4>Personal Information</h4><a href="{% url 'edit_profile' %}" class="btn btn-outline btn-sm">Edit</a></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+              <div><label class="form-label">First Name</label><p>{{ user.first_name|default:"Not set" }}</p></div>
+              <div><label class="form-label">Last Name</label><p>{{ user.last_name|default:"Not set" }}</p></div>
+              <div><label class="form-label">Email</label><p>{{ user.email }}</p></div>
+              <div><label class="form-label">Phone</label><p>{{ user.phone|default:"Not set" }}</p></div>
+              <div><label class="form-label">Nationality</label><p>{{ user.nationality|default:"Not set" }}</p></div>
+              <div><label class="form-label">Date of Birth</label><p>{{ user.date_of_birth|date:"M d, Y"|default:"Not set" }}</p></div>
+            </div>
+            {% if user.bio %}<div style="margin-top:1rem"><label class="form-label">Bio</label><p>{{ user.bio }}</p></div>{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base/base.html" %}
+{% block title %}Services — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">Experiences</span>
+    <h1>Hotel Services</h1>
+    <div class="breadcrumb"><a href="{% url 'home' %}">Home</a> <i class="fa fa-chevron-right" style="font-size:.6rem"></i> <span>Services</span></div>
+  </div>
+</div>
+
+<!-- SPA HIGHLIGHT -->
+<section class="section" style="background:var(--white)">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <span class="section-label">Wellness</span>
+        <h2>The Lumiere Spa</h2>
+        <div class="gold-divider" style="justify-content:flex-start"><span></span><i class="fa fa-circle"></i><span></span></div>
+        <p style="margin-bottom:1.2rem">Spread across 2,000 sqm, the Lumiere Spa is a sanctuary designed for total renewal of body and mind. Drawing inspiration from ancient healing traditions fused with cutting-edge techniques.</p>
+        <p style="margin-bottom:2rem">Our team of expert therapists offer more than 60 treatments including signature massages, rasul ceremonies, and personalised beauty rituals.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:2rem">
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.88rem"><i class="fa fa-check-circle" style="color:var(--gold)"></i> 14 Treatment Rooms</div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.88rem"><i class="fa fa-check-circle" style="color:var(--gold)"></i> Hammam &amp; Sauna</div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.88rem"><i class="fa fa-check-circle" style="color:var(--gold)"></i> Hydrotherapy Pools</div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.88rem"><i class="fa fa-check-circle" style="color:var(--gold)"></i> Couples Suites</div>
+        </div>
+        <a href="{% url 'contact' %}" class="btn btn-primary">Book a Treatment</a>
+      </div>
+      <div class="about-image reveal">
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80" alt="Lumiere Spa">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESTAURANT -->
+<section class="section" style="background:var(--beige-light)">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-image reveal">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Le Jardin Restaurant">
+      </div>
+      <div class="reveal">
+        <span class="section-label">Fine Dining</span>
+        <h2>Le Jardin Restaurant</h2>
+        <div class="gold-divider" style="justify-content:flex-start"><span></span><i class="fa fa-circle"></i><span></span></div>
+        <p style="margin-bottom:1.2rem">Step into Le Jardin and enter a world of culinary artistry. Chef Antoine Dubois, holder of two Michelin stars, creates seasonal menus that celebrate the finest French produce.</p>
+        <p style="margin-bottom:2rem">The restaurant seats 80 guests in an ambiance of intimate elegance, with a curated wine list of over 400 labels from leading estates across Europe.</p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <div style="text-align:center;padding:1rem 1.5rem;background:var(--white);border-radius:var(--radius-sm)">
+            <div style="font-family:var(--font-serif);font-size:1.8rem;color:var(--gold)">2</div>
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gray)">Michelin Stars</div>
+          </div>
+          <div style="text-align:center;padding:1rem 1.5rem;background:var(--white);border-radius:var(--radius-sm)">
+            <div style="font-family:var(--font-serif);font-size:1.8rem;color:var(--gold)">400+</div>
+            <div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gray)">Wine Labels</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALL SERVICES GRID -->
+<section class="section" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">All Services</span>
+      <h2>Everything You Need</h2>
+      <div class="gold-divider"><span></span><i class="fa fa-circle"></i><span></span></div>
+    </div>
+    {% if service_categories %}
+      {% for cat in service_categories %}
+      <h3 style="margin-bottom:1.5rem;font-size:1.6rem">{{ cat.name }}</h3>
+      <div class="services-grid" style="margin-bottom:3rem">
+        {% for svc in cat.services.all %}
+        <div class="service-card reveal">
+          <div class="service-icon"><i class="fa fa-star"></i></div>
+          <h4>{{ svc.name }}</h4>
+          <p>{{ svc.description|truncatechars:100 }}</p>
+          {% if svc.price %}<p style="color:var(--gold);font-family:var(--font-serif);font-size:1.1rem;margin-top:.5rem">From ${{ svc.price }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="services-grid">
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-dumbbell"></i></div><h4>Fitness Centre</h4><p>State-of-the-art equipment open 24/7, with personal trainer sessions available on request.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-swimming-pool"></i></div><h4>Rooftop Pool</h4><p>Heated infinity pool with panoramic Parisian views. Towels, sun loungers and cocktails provided.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-concierge-bell"></i></div><h4>24/7 Concierge</h4><p>Our concierge team is available round the clock for every request, however small or grand.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-car"></i></div><h4>Airport Transfer</h4><p>Chauffeured luxury vehicles available for seamless transfers to and from all Paris airports.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-utensils"></i></div><h4>Room Service</h4><p>Full restaurant menu available in-room, 24 hours a day. Breakfast in bed is our speciality.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-child"></i></div><h4>Kids Club</h4><p>Supervised activities for children aged 4–12, so parents can enjoy their time in peace.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-briefcase"></i></div><h4>Business Centre</h4><p>Fully equipped meeting rooms, secretarial services and high-speed connectivity for corporate guests.</p></div>
+      <div class="service-card reveal"><div class="service-icon"><i class="fa fa-tshirt"></i></div><h4>Laundry &amp; Pressing</h4><p>Same-day laundry and dry-cleaning service for all guest garments and wardrobes.</p></div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

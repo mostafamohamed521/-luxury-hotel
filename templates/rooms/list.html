@@ -1,0 +1,109 @@
+{% extends "base/base.html" %}
+{% block title %}Rooms &amp; Suites — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">Accommodations</span>
+    <h1>Rooms &amp; Suites</h1>
+    <div class="breadcrumb"><a href="{% url 'home' %}">Home</a> <i class="fa fa-chevron-right" style="font-size:.6rem"></i> <span>Rooms &amp; Suites</span></div>
+  </div>
+</div>
+<section class="section">
+  <div class="container">
+    <div class="rooms-layout">
+      <!-- SIDEBAR FILTERS -->
+      <aside>
+        <div class="filter-sidebar">
+          <h4>Filter Rooms</h4>
+          <form method="get" id="filterForm">
+            <div class="filter-group">
+              <label>Check In</label>
+              <input type="date" name="check_in" class="form-control" value="{{ form.check_in.value|default:'' }}">
+            </div>
+            <div class="filter-group">
+              <label>Check Out</label>
+              <input type="date" name="check_out" class="form-control" value="{{ form.check_out.value|default:'' }}">
+            </div>
+            <div class="filter-group">
+              <label>Guests</label>
+              <select name="guests" class="form-control">
+                {% for i in "12345678" %}<option value="{{ forloop.counter }}" {% if form.guests.value == forloop.counter|stringformat:"s" %}selected{% endif %}>{{ forloop.counter }} Guest{% if forloop.counter > 1 %}s{% endif %}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Category</label>
+              <select name="category" class="form-control">
+                <option value="">All Categories</option>
+                {% for cat in categories %}<option value="{{ cat.slug }}" {% if form.category.value == cat.slug %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Price Range / Night</label>
+              <div class="d-flex gap-1">
+                <input type="number" name="min_price" class="form-control" placeholder="Min $" value="{{ form.min_price.value|default:'' }}">
+                <input type="number" name="max_price" class="form-control" placeholder="Max $" value="{{ form.max_price.value|default:'' }}">
+              </div>
+            </div>
+            <div class="filter-group">
+              <label>Amenities</label>
+              <label class="filter-check"><input type="checkbox" name="sea_view" {% if form.sea_view.value %}checked{% endif %}> Sea View</label>
+              <label class="filter-check"><input type="checkbox" name="has_balcony" {% if form.has_balcony.value %}checked{% endif %}> Balcony</label>
+              <label class="filter-check"><input type="checkbox" name="has_jacuzzi" {% if form.has_jacuzzi.value %}checked{% endif %}> Jacuzzi</label>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+            <a href="{% url 'rooms_list' %}" class="btn btn-outline w-100 mt-2">Clear All</a>
+          </form>
+        </div>
+      </aside>
+
+      <!-- ROOMS GRID -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <p style="color:var(--gray);font-size:.88rem">Showing <strong>{{ rooms|length }}</strong> room{{ rooms|length|pluralize }} available</p>
+        </div>
+        <div class="rooms-grid">
+          {% for room in rooms %}
+          <div class="room-card reveal">
+            <div class="room-card-img">
+              {% with room.images.first as img %}
+              {% if img %}<img src="{{ img.image.url }}" alt="{{ room.name }}">
+              {% else %}<img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="{{ room.name }}">{% endif %}
+              {% endwith %}
+              {% if room.is_featured %}<span class="room-card-badge">Featured</span>{% endif %}
+              <a href="{% url 'toggle_favorite' room.pk %}" class="room-card-fav {% if room.pk in user_favorites %}active{% endif %}">
+                <i class="fa{% if room.pk in user_favorites %}s{% else %}r{% endif %} fa-heart"></i>
+              </a>
+            </div>
+            <div class="room-card-body">
+              <div class="room-category">{{ room.category.name }}</div>
+              <h3>{{ room.name }}</h3>
+              <p>{{ room.short_description }}</p>
+              <div class="room-meta">
+                <span class="room-meta-item"><i class="fa fa-expand-arrows-alt"></i> {{ room.size_sqm }} m²</span>
+                <span class="room-meta-item"><i class="fa fa-user-friends"></i> {{ room.max_guests }} guests</span>
+                {% if room.has_sea_view %}<span class="room-meta-item"><i class="fa fa-water"></i> Sea View</span>{% endif %}
+                {% if room.has_balcony %}<span class="room-meta-item"><i class="fa fa-door-open"></i> Balcony</span>{% endif %}
+                {% if room.has_jacuzzi %}<span class="room-meta-item"><i class="fa fa-hot-tub"></i> Jacuzzi</span>{% endif %}
+              </div>
+              <div class="room-card-footer">
+                <div class="room-price">
+                  <span class="amount">${{ room.price_per_night }}</span>
+                  <span class="per-night"> / night</span>
+                </div>
+                <a href="{% url 'room_detail' room.pk %}" class="btn btn-primary btn-sm">View Room</a>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div style="grid-column:1/-1;text-align:center;padding:4rem 2rem">
+            <i class="fa fa-bed" style="font-size:3rem;color:var(--beige-dark);margin-bottom:1rem;display:block"></i>
+            <h3 style="margin-bottom:.5rem">No rooms found</h3>
+            <p style="color:var(--gray)">Try adjusting your filters or dates.</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

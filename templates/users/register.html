@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+{% block title %}Create Account — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-visual">
+    <span class="section-label" style="color:var(--gold)">Welcome</span>
+    <h2>Begin Your<br>Lumiere Journey</h2>
+    <p>Join our family of discerning travellers and unlock exclusive benefits, early access to new suites, and personalised experiences.</p>
+  </div>
+  <div class="auth-form-section">
+    <h1>Create Account</h1>
+    <p class="auth-subtitle">Already have an account? <a href="{% url 'login' %}" style="color:var(--gold)">Sign in here</a></p>
+    <form method="post">
+      {% csrf_token %}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" name="first_name" class="form-control" placeholder="Jean" value="{{ form.first_name.value|default:'' }}" required>
+          {% if form.first_name.errors %}<p style="color:#EF4444;font-size:.8rem;margin-top:.3rem">{{ form.first_name.errors.0 }}</p>{% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" name="last_name" class="form-control" placeholder="Dupont" value="{{ form.last_name.value|default:'' }}" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="jean@example.com" value="{{ form.email.value|default:'' }}" required>
+        {% if form.email.errors %}<p style="color:#EF4444;font-size:.8rem;margin-top:.3rem">{{ form.email.errors.0 }}</p>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone (optional)</label>
+        <input type="tel" name="phone" class="form-control" placeholder="+33 6 12 34 56 78" value="{{ form.phone.value|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password1" class="form-control" placeholder="Create a strong password" required>
+        {% if form.password1.errors %}<p style="color:#EF4444;font-size:.8rem;margin-top:.3rem">{{ form.password1.errors.0 }}</p>{% endif %}
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" name="password2" class="form-control" placeholder="Repeat password" required>
+        {% if form.password2.errors %}<p style="color:#EF4444;font-size:.8rem;margin-top:.3rem">{{ form.password2.errors.0 }}</p>{% endif %}
+      </div>
+      {% if form.non_field_errors %}<div class="alert alert-error">{{ form.non_field_errors.0 }}</div>{% endif %}
+      <button type="submit" class="btn btn-primary w-100 btn-lg" style="margin-top:.5rem">Create My Account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

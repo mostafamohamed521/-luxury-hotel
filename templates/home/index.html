@@ -1,0 +1,228 @@
+{% extends "base/base.html" %}
+{% block title %}Lumiere Hotel — Refined Luxury in Paris{% endblock %}
+{% block nav_class %}transparent{% endblock %}
+{% block nav_transparent %}true{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span>Est. 1892 &nbsp;&#183;&nbsp; Paris, France</span></div>
+    <h1>Where Every Moment<br>Becomes <em>Unforgettable</em></h1>
+    <p class="hero-subtitle">A sanctuary of refined elegance. Immerse yourself in luxury, where timeless design meets impeccable service.</p>
+
+    <div class="booking-bar">
+      <form method="get" action="{% url 'rooms_list' %}">
+        <div class="booking-bar-grid">
+          <div class="booking-field">
+            <label>Check In</label>
+            <input type="date" name="check_in" min="{{ today }}" placeholder="Select date">
+          </div>
+          <div class="booking-field">
+            <label>Check Out</label>
+            <input type="date" name="check_out" placeholder="Select date">
+          </div>
+          <div class="booking-field">
+            <label>Guests</label>
+            <select name="guests">
+              <option value="1">1 Guest</option>
+              <option value="2" selected>2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+            </select>
+          </div>
+          <div class="booking-field">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fa fa-search"></i> Search
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <span class="number count-up" data-target="48" data-suffix="+">48+</span>
+      <span class="label">Luxury Suites</span>
+    </div>
+    <div class="stat-item">
+      <span class="number count-up" data-target="5" data-suffix="★">5★</span>
+      <span class="label">Rating</span>
+    </div>
+    <div class="stat-item">
+      <span class="number count-up" data-target="132" data-suffix="">132</span>
+      <span class="label">Years of Excellence</span>
+    </div>
+    <div class="stat-item">
+      <span class="number count-up" data-target="98" data-suffix="%">98%</span>
+      <span class="label">Guest Satisfaction</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED ROOMS -->
+<section class="section" style="background:var(--cream)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Accommodations</span>
+      <h2>Our Finest Rooms &amp; Suites</h2>
+      <div class="gold-divider"><span></span><i class="fa fa-circle"></i><span></span></div>
+      <p>Each room is a masterpiece of design — crafted to envelop you in comfort, warmth, and understated luxury.</p>
+    </div>
+    <div class="rooms-grid">
+      {% for room in featured_rooms %}
+      <div class="room-card reveal">
+        <div class="room-card-img">
+          {% with room.images.first as img %}
+          {% if img %}
+            <img src="{{ img.image.url }}" alt="{{ room.name }}">
+          {% else %}
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="{{ room.name }}">
+          {% endif %}
+          {% endwith %}
+          {% if room.is_featured %}<span class="room-card-badge">Featured</span>{% endif %}
+          <a href="{% url 'toggle_favorite' room.pk %}" class="room-card-fav {% if room.pk in user_favorites %}active{% endif %}">
+            <i class="fa{% if room.pk in user_favorites %}s{% else %}r{% endif %} fa-heart"></i>
+          </a>
+        </div>
+        <div class="room-card-body">
+          <div class="room-category">{{ room.category.name }}</div>
+          <h3>{{ room.name }}</h3>
+          <p>{{ room.short_description }}</p>
+          <div class="room-meta">
+            <span class="room-meta-item"><i class="fa fa-expand-arrows-alt"></i> {{ room.size_sqm }} m²</span>
+            <span class="room-meta-item"><i class="fa fa-user-friends"></i> Up to {{ room.max_guests }} guests</span>
+            {% if room.has_sea_view %}<span class="room-meta-item"><i class="fa fa-water"></i> Sea View</span>{% endif %}
+            {% if room.has_balcony %}<span class="room-meta-item"><i class="fa fa-door-open"></i> Balcony</span>{% endif %}
+          </div>
+          <div class="room-card-footer">
+            <div class="room-price">
+              <span class="amount">${{ room.price_per_night }}</span>
+              <span class="per-night"> / night</span>
+            </div>
+            <a href="{% url 'room_detail' room.pk %}" class="btn btn-primary btn-sm">View Room</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div style="grid-column:1/-1;text-align:center;padding:3rem">
+        <p style="color:var(--gray)">No featured rooms at this time. <a href="{% url 'rooms_list' %}" style="color:var(--gold)">Browse all rooms</a></p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4 reveal">
+      <a href="{% url 'rooms_list' %}" class="btn btn-outline btn-lg">View All Rooms</a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" style="background:var(--beige-light)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Experiences</span>
+      <h2>World-Class Services</h2>
+      <div class="gold-divider"><span></span><i class="fa fa-circle"></i><span></span></div>
+      <p>Beyond a room — a complete journey of the senses, from our award-winning spa to our Michelin-starred restaurant.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fa fa-spa"></i></div>
+        <h4>Lumiere Spa</h4>
+        <p>A 2,000 sqm sanctuary of wellness featuring 14 treatment rooms, hammam, and hydrotherapy pools.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fa fa-utensils"></i></div>
+        <h4>Le Jardin Restaurant</h4>
+        <p>Award-winning French cuisine by Chef Antoine Dubois — a symphony of flavours in an elegant setting.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fa fa-dumbbell"></i></div>
+        <h4>Fitness Centre</h4>
+        <p>State-of-the-art equipment, personal trainers, and rooftop yoga with panoramic city views.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fa fa-swimming-pool"></i></div>
+        <h4>Infinity Pool</h4>
+        <p>Our heated rooftop infinity pool offers an unobstructed view of the Parisian skyline — open year-round.</p>
+      </div>
+      {% for svc in services %}
+      <div class="service-card reveal">
+        <div class="service-icon"><i class="fa fa-star"></i></div>
+        <h4>{{ svc.name }}</h4>
+        <p>{{ svc.description|truncatechars:90 }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4 reveal">
+      <a href="{% url 'services' %}" class="btn btn-gold-outline btn-lg">All Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT STRIP -->
+<section class="section" style="background:var(--white)">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <span class="section-label">Our Story</span>
+        <h2>A Legacy of Luxury Since 1892</h2>
+        <div class="gold-divider" style="justify-content:flex-start"><span></span><i class="fa fa-circle"></i><span></span></div>
+        <p style="margin-bottom:1.2rem">For over a century, Lumiere Hotel has been synonymous with Parisian elegance. Originally the private mansion of the Comte de Lumiere, every stone whispers stories of royalty, diplomacy, and romance.</p>
+        <p style="margin-bottom:2rem">Today, we continue that tradition — blending the grandeur of the 19th century with the comforts of the modern age, offering guests an experience that transcends the ordinary.</p>
+        <a href="{% url 'about' %}" class="btn btn-dark">Discover Our History</a>
+      </div>
+      <div class="about-image reveal">
+        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80" alt="Lumiere Hotel Lobby">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+{% if reviews %}
+<section class="section" style="background:var(--beige-light)">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Guest Reviews</span>
+      <h2>What Our Guests Say</h2>
+      <div class="gold-divider"><span></span><i class="fa fa-circle"></i><span></span></div>
+    </div>
+    <div class="testimonials-grid">
+      {% for review in reviews %}
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+        <p class="testimonial-text">"{{ review.comment|truncatechars:160 }}"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">{{ review.user.first_name|first|upper }}{{ review.user.last_name|first|upper }}</div>
+          <div>
+            <h5>{{ review.user.get_full_name|default:review.user.username }}</h5>
+            <span>{{ review.room.name }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="section" style="background:var(--charcoal);text-align:center">
+  <div class="container reveal">
+    <span class="section-label" style="color:var(--gold)">Reserve Your Stay</span>
+    <h2 style="color:var(--white);margin-bottom:1rem">Begin Your Lumiere Experience</h2>
+    <p style="color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 2.5rem">Every reservation is a promise — of comfort, elegance, and memories that endure far beyond your stay.</p>
+    <a href="{% url 'rooms_list' %}" class="btn btn-primary btn-lg">Explore Rooms</a>
+    &nbsp;&nbsp;
+    <a href="{% url 'contact' %}" class="btn btn-outline" style="border-color:rgba(255,255,255,0.3);color:var(--white)">Contact Concierge</a>
+  </div>
+</section>
+
+{% endblock %}

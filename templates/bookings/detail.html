@@ -1,0 +1,62 @@
+{% extends "base/base.html" %}
+{% block title %}Booking {{ booking.booking_ref }} — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<section class="section-sm">
+  <div class="container" style="max-width:800px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+      <div>
+        <h2 style="margin-bottom:.3rem">Booking Details</h2>
+        <p style="color:var(--gray);font-size:.88rem">Reference: <strong>{{ booking.booking_ref }}</strong></p>
+      </div>
+      <span class="badge badge-{{ booking.status }}" style="font-size:.82rem;padding:.4rem 1rem">{{ booking.get_status_display }}</span>
+    </div>
+
+    <div class="card mb-3" style="margin-bottom:1.5rem">
+      <div class="card-header"><h4>Room Information</h4></div>
+      <div class="card-body" style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap">
+        {% with booking.room.images.first as img %}
+        {% if img %}<img src="{{ img.image.url }}" alt="{{ booking.room.name }}" style="width:120px;height:90px;object-fit:cover;border-radius:var(--radius-sm)">{% endif %}
+        {% endwith %}
+        <div>
+          <h4>{{ booking.room.name }}</h4>
+          <p style="color:var(--gray);font-size:.85rem;margin:0">{{ booking.room.category.name }} &nbsp;&#183;&nbsp; Room {{ booking.room.room_number }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <div class="card">
+        <div class="card-header"><h4>Stay Details</h4></div>
+        <div class="card-body">
+          <div class="booking-detail-row"><span class="label">Check In</span><span class="value">{{ booking.check_in|date:"D, M d Y" }}</span></div>
+          <div class="booking-detail-row"><span class="label">Check Out</span><span class="value">{{ booking.check_out|date:"D, M d Y" }}</span></div>
+          <div class="booking-detail-row"><span class="label">Duration</span><span class="value">{{ booking.nights }} night{{ booking.nights|pluralize }}</span></div>
+          <div class="booking-detail-row"><span class="label">Guests</span><span class="value">{{ booking.guests }}</span></div>
+          {% if booking.special_requests %}
+          <div style="margin-top:1rem"><label class="form-label">Special Requests</label><p style="font-size:.88rem">{{ booking.special_requests }}</p></div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h4>Price Breakdown</h4></div>
+        <div class="card-body">
+          <div class="booking-detail-row"><span class="label">Room ({{ booking.nights }} nights)</span><span class="value">${{ booking.room_price }}</span></div>
+          <div class="booking-detail-row"><span class="label">Taxes &amp; fees (15%)</span><span class="value">${{ booking.taxes }}</span></div>
+          <div class="booking-total-row"><span class="label">Total Paid</span><span class="value">${{ booking.total_price }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap">
+      <a href="{% url 'my_bookings' %}" class="btn btn-outline">All Bookings</a>
+      {% if booking.status == 'pending' %}
+      <a href="{% url 'checkout' booking.pk %}" class="btn btn-primary">Complete Payment</a>
+      {% endif %}
+      {% if booking.status in 'pending,confirmed' %}
+      <a href="{% url 'cancel_booking' booking.pk %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel Booking</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

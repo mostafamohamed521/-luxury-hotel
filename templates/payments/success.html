@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% block title %}Booking Confirmed — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<section class="section">
+  <div class="success-container">
+    <div class="success-icon"><i class="fa fa-check"></i></div>
+    <span class="section-label">Booking Confirmed</span>
+    <h2 style="margin-bottom:.8rem">Your Stay is Reserved!</h2>
+    <p style="color:var(--gray);margin-bottom:2rem">Booking <strong>{{ booking.booking_ref }}</strong> has been confirmed. A confirmation has been sent to {{ booking.user.email }}.</p>
+    <div class="card" style="text-align:left;margin-bottom:2rem">
+      <div class="card-body">
+        <h4 style="margin-bottom:1.2rem">{{ booking.room.name }}</h4>
+        <div class="booking-detail-row"><span class="label">Check In</span><span class="value">{{ booking.check_in|date:"D, M d Y" }}</span></div>
+        <div class="booking-detail-row"><span class="label">Check Out</span><span class="value">{{ booking.check_out|date:"D, M d Y" }}</span></div>
+        <div class="booking-detail-row"><span class="label">Duration</span><span class="value">{{ booking.nights }} night{{ booking.nights|pluralize }}</span></div>
+        <div class="booking-detail-row"><span class="label">Guests</span><span class="value">{{ booking.guests }}</span></div>
+        <div class="booking-total-row"><span class="label">Total Paid</span><span class="value">${{ booking.total_price }}</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="{% url 'booking_detail' booking.pk %}" class="btn btn-outline">View Booking</a>
+      <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

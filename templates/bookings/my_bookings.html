@@ -1,0 +1,56 @@
+{% extends "base/base.html" %}
+{% block title %}My Bookings — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">My Account</span>
+    <h1>My Bookings</h1>
+    <div class="breadcrumb"><a href="{% url 'home' %}">Home</a> <i class="fa fa-chevron-right" style="font-size:.6rem"></i> <span>My Bookings</span></div>
+  </div>
+</div>
+<section class="section-sm">
+  <div class="container">
+    {% if bookings %}
+    {% for booking in bookings %}
+    <div class="card" style="margin-bottom:1.2rem">
+      <div class="card-body" style="padding:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:1rem">
+          <div>
+            <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;flex-wrap:wrap">
+              <h4 style="margin:0">{{ booking.room.name }}</h4>
+              <span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--gray);margin:.3rem 0">Ref: <strong>{{ booking.booking_ref }}</strong> &nbsp;&#183;&nbsp; Booked {{ booking.created_at|date:"M d, Y" }}</p>
+            <div style="display:flex;gap:1.5rem;margin-top:.6rem;flex-wrap:wrap">
+              <span style="font-size:.85rem"><i class="fa fa-calendar" style="color:var(--gold)"></i> {{ booking.check_in|date:"M d" }} &#8594; {{ booking.check_out|date:"M d, Y" }}</span>
+              <span style="font-size:.85rem"><i class="fa fa-moon" style="color:var(--gold)"></i> {{ booking.nights }} night{{ booking.nights|pluralize }}</span>
+              <span style="font-size:.85rem"><i class="fa fa-user-friends" style="color:var(--gold)"></i> {{ booking.guests }} guest{{ booking.guests|pluralize }}</span>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:var(--font-serif);font-size:1.6rem;color:var(--gold)">${{ booking.total_price }}</div>
+            <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+              <a href="{% url 'booking_detail' booking.pk %}" class="btn btn-outline btn-sm">View</a>
+              {% if booking.status == 'pending' %}
+              <a href="{% url 'checkout' booking.pk %}" class="btn btn-primary btn-sm">Pay Now</a>
+              {% endif %}
+              {% if booking.status in 'pending,confirmed' %}
+              <a href="{% url 'cancel_booking' booking.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Cancel?')">Cancel</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div style="text-align:center;padding:5rem 2rem">
+      <i class="fa fa-bed" style="font-size:4rem;color:var(--beige-dark);display:block;margin-bottom:1.5rem"></i>
+      <h2>No bookings yet</h2>
+      <p style="color:var(--gray);margin-bottom:2rem">Explore our rooms and start planning your perfect escape.</p>
+      <a href="{% url 'rooms_list' %}" class="btn btn-primary btn-lg">Browse Rooms</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base/base.html" %}
+{% block title %}Contact Us — Lumiere Hotel{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <div class="page-hero-content">
+    <span class="section-label">Get In Touch</span>
+    <h1>Contact &amp; Concierge</h1>
+  </div>
+</div>
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="reveal">
+        <span class="section-label">Reach Us</span>
+        <h2>We Are Here For You</h2>
+        <div class="gold-divider" style="justify-content:flex-start"><span></span><i class="fa fa-circle"></i><span></span></div>
+        <p style="margin-bottom:2rem">Our concierge team is available around the clock to assist with reservations, special requests, and every detail of your stay.</p>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fa fa-map-marker-alt"></i></div>
+          <div><h5>Address</h5><p>1 Boulevard Haussmann, 75009 Paris, France</p></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fa fa-phone"></i></div>
+          <div><h5>Phone</h5><p>+33 1 23 45 67 89<br><span style="font-size:.8rem;color:var(--gray)">Available 24 hours / 7 days</span></p></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fa fa-envelope"></i></div>
+          <div><h5>Email</h5><p>hello@lumiere-hotel.com<br>reservations@lumiere-hotel.com</p></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon"><i class="fa fa-clock"></i></div>
+          <div><h5>Hours</h5><p>Check-in: 3:00 PM / Check-out: 12:00 PM<br>Concierge: 24/7</p></div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="card">
+          <div class="card-header"><h4>Send a Message</h4></div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div class="form-group"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" placeholder="Jean" required></div>
+                <div class="form-group"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" placeholder="Dupont" required></div>
+              </div>
+              <div class="form-group"><label class="form-label">Email</label><input type="email" name="email" class="form-control" placeholder="jean@example.com" required></div>
+              <div class="form-group"><label class="form-label">Subject</label>
+                <select name="subject" class="form-control">
+                  <option>General Enquiry</option>
+                  <option>Room Reservation</option>
+                  <option>Spa Booking</option>
+                  <option>Event Planning</option>
+                  <option>Special Occasion</option>
+                  <option>Feedback</option>
+                </select>
+              </div>
+              <div class="form-group"><label class="form-label">Message</label><textarea name="message" class="form-control" rows="5" placeholder="How may we assist you?" required></textarea></div>
+              <button type="submit" class="btn btn-primary w-100">Send Message <i class="fa fa-paper-plane"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

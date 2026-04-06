@@ -1,0 +1,41 @@
+{% extends "base/base.html" %}
+{% block title %}Manage Guests — Admin{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-logo">Lumiere<span>&#10022;</span></div>
+    <nav class="admin-nav">
+      <a href="{% url 'admin_dashboard' %}" class="admin-nav-item"><i class="fa fa-chart-pie"></i> Dashboard</a>
+      <a href="{% url 'admin_rooms' %}" class="admin-nav-item"><i class="fa fa-bed"></i> Rooms</a>
+      <a href="{% url 'admin_bookings' %}" class="admin-nav-item"><i class="fa fa-calendar-check"></i> Bookings</a>
+      <a href="{% url 'admin_users' %}" class="admin-nav-item active"><i class="fa fa-users"></i> Guests</a>
+      <a href="{% url 'admin_payments' %}" class="admin-nav-item"><i class="fa fa-credit-card"></i> Payments</a>
+      <a href="/django-admin/" class="admin-nav-item"><i class="fa fa-cog"></i> Django Admin</a>
+      <a href="{% url 'home' %}" class="admin-nav-item"><i class="fa fa-arrow-left"></i> Back to Site</a>
+    </nav>
+  </aside>
+  <main class="admin-content">
+    <h2 class="admin-page-title">Guest Management</h2>
+    <div style="overflow-x:auto">
+      <table class="admin-table">
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Joined</th><th>Role</th></tr></thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td><strong>{{ u.get_full_name|default:u.username }}</strong></td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone|default:"&#8212;" }}</td>
+            <td>{{ u.booking_count }}</td>
+            <td>{{ u.date_joined|date:"M d, Y" }}</td>
+            <td>{% if u.is_staff %}<span class="badge badge-confirmed">Staff</span>{% else %}<span class="badge badge-checked_out">Guest</span>{% endif %}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" style="text-align:center;color:var(--gray);padding:3rem">No guests registered.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+{% endblock %}

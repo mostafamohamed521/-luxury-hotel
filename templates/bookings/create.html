@@ -1,0 +1,68 @@
+{% extends "base/base.html" %}
+{% block title %}Book {{ room.name }} — Lumiere Hotel{% endblock %}
+{% block content %}
+<div style="padding-top:76px"></div>
+<section class="section-sm">
+  <div class="container">
+    <div style="margin-bottom:2rem">
+      <a href="{% url 'room_detail' room.pk %}" style="color:var(--gold);font-size:.85rem"><i class="fa fa-arrow-left"></i> Back to {{ room.name }}</a>
+    </div>
+    <h2 style="margin-bottom:2rem">Complete Your Reservation</h2>
+    <div class="booking-layout">
+      <div>
+        <div class="card">
+          <div class="card-header"><h4>Booking Details</h4></div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              {% if form.non_field_errors %}<div class="alert alert-error">{{ form.non_field_errors.0 }}</div>{% endif %}
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                <div class="form-group">
+                  <label class="form-label">Check In</label>
+                  <input type="date" name="check_in" class="form-control" data-price="{{ room.price_per_night }}" value="{{ form.check_in.value|default:'' }}" required>
+                  {% if form.check_in.errors %}<p style="color:#EF4444;font-size:.8rem">{{ form.check_in.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Check Out</label>
+                  <input type="date" name="check_out" class="form-control" value="{{ form.check_out.value|default:'' }}" required>
+                  {% if form.check_out.errors %}<p style="color:#EF4444;font-size:.8rem">{{ form.check_out.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Number of Guests</label>
+                <select name="guests" class="form-control">
+                  {% for i in "12345678" %}{% if forloop.counter <= room.max_guests %}
+                  <option value="{{ forloop.counter }}">{{ forloop.counter }} Guest{% if forloop.counter > 1 %}s{% endif %}</option>
+                  {% endif %}{% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Special Requests (optional)</label>
+                <textarea name="special_requests" class="form-control" rows="3" placeholder="E.g. high floor, late check-in, dietary requirements...">{{ form.special_requests.value|default:'' }}</textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg">Proceed to Payment</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-summary-card">
+        {% with room.images.first as img %}
+        <div class="booking-summary-img">
+          {% if img %}<img src="{{ img.image.url }}" alt="{{ room.name }}">
+          {% else %}<img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80" alt="{{ room.name }}">{% endif %}
+        </div>
+        {% endwith %}
+        <div class="booking-summary-body">
+          <div class="room-category">{{ room.category.name }}</div>
+          <h4>{{ room.name }}</h4>
+          <div class="booking-detail-row"><span class="label">Room rate</span><span class="value">${{ room.price_per_night }} / night</span></div>
+          <div class="booking-detail-row"><span class="label">Max guests</span><span class="value">{{ room.max_guests }} guests</span></div>
+          <div id="price-preview" style="margin-top:.5rem"></div>
+          <p style="font-size:.76rem;color:var(--gray);margin-top:1rem"><i class="fa fa-shield-alt" style="color:var(--gold)"></i> Free cancellation 48h before check-in.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
